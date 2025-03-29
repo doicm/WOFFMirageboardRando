@@ -22,9 +22,9 @@ namespace MBRando
             Console.WriteLine("Press enter when you're ready.");
             Console.ReadLine();
 
-            string WOFFfilepath = SharedMethods.SetPath("");
+            string WOFFfilepath = SharedMethods.SetPath("WOFF.exe");
 
-            if (!WOFFfilepath.EndsWith("WOFF.exe"))
+            if (WOFFfilepath == string.Empty)
             {
                 Console.WriteLine("Please specify WOFF.exe file. Exiting. Please try again.");
                 System.Threading.Thread.Sleep(2000);
