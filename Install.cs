@@ -1,9 +1,11 @@
-﻿using System;
+﻿using CshToolHelpers;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace MBRando
 {
@@ -36,24 +38,6 @@ namespace MBRando
                 File.Copy(sourceCSH, destinationToCopyTo, true);
             }
         }
-        // Method for converting CSH to CSV
-        private static ProcessStartInfo cshToCsvProcess(string basepath, string name)
-        {
-            ProcessStartInfo proc = new ProcessStartInfo();
-            proc.FileName = basepath + "\\MBRando\\WoFFCshTool_v1.1\\WoFFCshTool.exe";
-            proc.Arguments = "-csv " + basepath + "\\MBRando\\" + name + ".csh";
-            return proc;
-        }
-
-        // Method for converting CSV to CSH
-        private static ProcessStartInfo csvToCshProcess(string basepath, string name)
-        {
-            ProcessStartInfo proc = new ProcessStartInfo();
-            proc.FileName = basepath + "\\MBRando\\WoFFCshTool_v1.1\\WoFFCshTool.exe";
-            proc.Arguments = "-csh " + basepath + "\\MBRando\\" + name + ".csv";
-
-            return proc;
-        }
 
         private static void copyBackAndDelete(string basepath, string name)
         {
@@ -85,13 +69,13 @@ namespace MBRando
             System.IO.File.WriteAllText(basepath + "/MBRando/logs/seed.txt", sV);
 
             // Run the WoFFCshTool by Surihia twice, one to decompress csh and convert to csv, and one to do the reverse after writing the values
-            Process.Start(cshToCsvProcess(basepath, "mirageboard_data")).WaitForExit();
+            ConversionHelpers.ConvertToCsv(Path.Combine(basepath, "MBRando", "mirageboard_data.csh"));
 
             // Write the values
             Mirageboard.mirageboard_dataWriteCsv(basepath, sV);
 
             // Second WoFFCshTool run
-            Process.Start(csvToCshProcess(basepath, "mirageboard_data")).WaitForExit();
+            ConversionHelpers.ConvertToCsh(Path.Combine(basepath, "MBRando", "mirageboard_data.csv"));
 
             copyBackAndDelete(basepath, "mirageboard_data");
 
